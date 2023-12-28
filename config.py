@@ -25,14 +25,14 @@ class Config:
         self.complexity_of_operations = 0.3
         self.complexity_of_logic = 0.3
 
-        self.population = 50
+        self.population = 100
         self.generations = 100
         self.tournament_size = 40
 
         self.not_prob = 30
         self.evolution_prob = {
-            'crossover': 20,
-            'mutation': 80
+            'crossover': 50,
+            'mutation': 50
         }
 
         # max 100

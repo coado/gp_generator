@@ -49,6 +49,15 @@ class Utils:
     def is_false(self, token):
         return token == self.config.syntax['false']
     
+    def is_block(self, token):
+        if (self.is_if(token) or
+            self.is_while(token) or
+            self.is_equation(token) or
+            self.is_output(token)
+        ):
+            return True
+        return False
+    
     def choose_random_operation(self, exclude=None):
         operations = self.config.syntax['operations'][:]
         if exclude:

@@ -1,6 +1,7 @@
 import random
 from utils import Utils
 from gpParser import GpParser
+from traverseAdapter import TraverseAdapter
 
 class Evolution(Utils):
     def __init__(self, state, fitness, config):
@@ -75,8 +76,95 @@ class Evolution(Utils):
 
         return parent_stack_copy
 
+    def _get_token_type(self, token):
+        if self.is_block(token):
+            return 'block'
+        elif self.is_operation(token):
+            return 'operation'
+        elif self.is_condition(token):
+            return 'condition'
+        elif self.is_logic(token):
+            return 'logic'
+        elif self.is_not(token):
+            return 'not'
+        elif self.is_input(token):
+            return 'input'
+        elif self.is_output(token):
+            return 'output'
+        elif self.is_true(token):
+            return 'true'
+        elif self.is_false(token):
+            return 'false'
+        elif self.is_constant(token):
+            return 'constant'
+        elif self.is_variable(token):
+            return 'variable'
+        else:
+            return 'unknown'
+
+    def _analyze_stack(self, stack):
+        stats = {
+            "block": [],
+            "operation": [],
+            "condition": [],
+            "logic": [],
+            "not": [],
+            "input": [],
+            "output": [],
+            "true": [],
+            "false": [],
+            "constant": [],
+            "variable": [],
+        }
+
+        for i in range(len(stack)):
+            token = stack[i]
+            type = self._get_token_type(token)
+            if type == 'unknown':
+                continue
+            stats[type].append(i)
+                
+        return stats
+        
+            
     def _crossover(self, parent1_index, parent2_index):
-        pass
+        parent_copy = self.state.stack[parent1_index][:]
+        parent2_stack = self.state.stack[parent2_index]
+
+        parent_copy_length = len(parent_copy)
+        parent2_stack_length = len(parent2_stack)
+        parent2_stats = self._analyze_stack(parent2_stack)
+
+        # Get random index from parent1
+        start_index = random.randint(0, parent_copy_length - 1)
+        random_index = start_index
+        qualified = []
+        
+        while len(qualified) == 0:
+            # Try the neighbour
+            random_index = (random_index + 1) % parent_copy_length
+            if random_index == start_index:
+                # No qualified tokens
+                return parent_copy
+            token = parent_copy[random_index]
+            type = self._get_token_type(token)
+            if type == 'unknown':
+                continue
+            qualified = parent2_stats[type]
+
+        # Get random index from parent2
+        random_index2 = random.choice(qualified)
+           
+        traverseAdapterParent1 = TraverseAdapter(parent_copy, random_index)
+        traverseAdapterParent2 = TraverseAdapter(parent2_stack, random_index2)
+
+        s1, e1 = traverseAdapterParent1.shallow_traverse()
+        s2, e2 = traverseAdapterParent2.shallow_traverse()
+
+        parent_copy = parent_copy[:s1] + parent2_stack[s2:e2] + parent_copy[e1:]
+
+        return parent_copy
+        
 
     def _tournament(self):
         best = float('-inf')
@@ -122,13 +210,15 @@ class Evolution(Utils):
         return 1 
     
     def evolve(self):
+        print("EVOLVE")
         for g in range(self.config.generations):
             self.stats(g)
             if max(self.state.fitness) == 0:
                     return self.problem_solved()
                     
+
             # print(f"Generation {g}")
-            for i in range(self.config.population):
+            for _ in range(self.config.population):
                 evolution_type = self.get_random_evolution_type()
 
                 if evolution_type == 'crossover':
@@ -136,8 +226,7 @@ class Evolution(Utils):
                     # TODO: What if parents are the same?
                     parent1_index = self._tournament()
                     parent2_index = self._tournament()
-                    continue
-                    pass
+                    new_indiv = self._crossover(parent1_index, parent2_index)
 
                 elif evolution_type == 'mutation':
                     indiv_index = self._tournament()
