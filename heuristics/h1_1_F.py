@@ -9,13 +9,7 @@ import math
 def h_1_1_F(input, output, output_generated):
     
     if len(output_generated) != 1:
-<<<<<<< HEAD
-        return -math.inf
-    else:
-        return -abs(output_generated[0] - 1)
-=======
         rate -= 1000000
     if output_generated[0] != 1:
         rate -= abs(1 - output_generated[0])
     return rate
->>>>>>> 5e7acdac9ace5ed935dce538417db94bc0139b94

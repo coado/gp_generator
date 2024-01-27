@@ -210,7 +210,6 @@ class Evolution(Utils):
         return 1 
     
     def evolve(self):
-        print("EVOLVE")
         for g in range(self.config.generations):
             self.stats(g)
             if max(self.state.fitness) == 0:
