@@ -5,6 +5,7 @@ from antlr.GPMiniParser import GPMiniParser
 from antlr.MyGPMiniVisitor import MyGPMiniVisitor
 from gpParser import GpParser
 import math
+import timeit
 
 class Fitness():
     def __init__(self, heuristic, config):
@@ -15,7 +16,7 @@ class Fitness():
         self.prepare_data()
         
     def prepare_data(self):
-        file = open(self.config.data, 'r')
+        file = open('data/'+self.config.data, 'r')
         data = file.read().split('\n')
 
         for line in data:
@@ -42,8 +43,10 @@ class Fitness():
             visitor = MyGPMiniVisitor(self.config.max_interpreter_steps, self.input[i])
             tab = visitor.visitProgram(tree)
             output_generated = tab[0]
-            fitness += tab[1] - self.config.max_interpreter_steps
+            # fitness += tab[1] 
             if 'ERROR' in output_generated:
+                fitness -= math.inf
+            elif output_generated == []:
                 fitness -= math.inf
             else:
                 fitness += self.heuristic.rate(self.config.heuristic, self.input[i], self.output[i], output_generated)

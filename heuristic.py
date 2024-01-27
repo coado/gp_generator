@@ -13,6 +13,9 @@ from heuristics.h1_3_A import h_1_3_A
 from heuristics.h1_3_B import h_1_3_B
 from heuristics.h1_4_A import h_1_4_A
 from heuristics.h1_4_B import h_1_4_B
+from heuristics.h2_2 import h_2_2
+from heuristics.h2_21 import h_2_21
+
 
 
 class Heuristic:
@@ -51,5 +54,9 @@ class Heuristic:
                 return h_1_4_A(input, output, output_generated)
             case '1.4.B':
                 return h_1_4_B(input, output, output_generated)
+            case '2.2':
+                return h_2_2(input, output, output_generated)
+            case '2.21':
+                return h_2_21(input, output, output_generated)
             case _:
                 return 0
