@@ -15,14 +15,14 @@ from heuristics.h1_4_A import h_1_4_A
 from heuristics.h1_4_B import h_1_4_B
 from heuristics.h2_2 import h_2_2
 from heuristics.h2_21 import h_2_21
-
-
+from heuristics.h2_28 import h_2_28
+from heuristics.regression import regression
 
 class Heuristic:
     def __init__(self):
         self.problem = 1
 
-    def rate(self, heuristic, input, output, output_generated):
+    def rate(self, heuristic, input, output, output_generated, best_fitness = None, len_input = None):
         match heuristic:
             case '1.1.A':
                 return h_1_1_A(input, output, output_generated)
@@ -55,8 +55,12 @@ class Heuristic:
             case '1.4.B':
                 return h_1_4_B(input, output, output_generated)
             case '2.2':
-                return h_2_2(input, output, output_generated)
+                return h_2_2(input, output, output_generated, best_fitness, len_input)
             case '2.21':
-                return h_2_21(input, output, output_generated)
+                return h_2_21(input, output, output_generated, best_fitness, len_input)
+            case '2.28':
+                return h_2_28(input, output, output_generated, best_fitness, len_input)
+            case 'regression':
+                return regression(input, output, output_generated)
             case _:
                 return 0

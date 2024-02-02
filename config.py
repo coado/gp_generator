@@ -1,8 +1,8 @@
 class Config:
     def __init__(self):
 
-        self.data = 'data.txt'
-        self.heuristic = '1.1.B'
+        self.data = 'k_10.txt'
+        self.heuristic = 'regression'
 
         self.max_interpreter_steps = 1000
 
@@ -23,11 +23,11 @@ class Config:
         # 0 means no complexity
         # 1 means max complexity
         self.complexity_of_operations = 0.3
-        self.complexity_of_logic = 0.3
+        self.complexity_of_logic = 0.4
 
-        self.population = 100
+        self.population = 10
         self.generations = 100
-        self.tournament_size = 40
+        self.tournament_size = 3
 
         self.not_prob = 30
         self.evolution_prob = {
@@ -39,30 +39,30 @@ class Config:
         self.mut_prob_per_node = 10
         
         self.block_prob = {
-            'equation': 25,
-            'while': 25,
-            'if': 25,
-            'output': 25,
+            'equation': 20,
+            'while': 0,
+            'if': 50,
+            'output': 30,
         }
 
         # Use more vars or consts?
         self.operation_prob = {
-            'variable': 45,
-            'constant': 45,
-            'input': 10,
+            'variable': 50,
+            'constant': 0,
+            'input': 50,
         }
 
         self.condition_prob = {
-            'operation': 20,
-            'true': 40,
-            'false': 40,
-            'input': 0,
+            'operation': 0,
+            'true': 33,
+            'false': 33,
+            'input': 34,
         }
 
         self.equation_prob = {
-            'operation': 34,
-            'logic': 33,
-            'input': 33,
+            'operation': 0,
+            'logic': 50,
+            'input': 50,
         }
 
         self.syntax = {

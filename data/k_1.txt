@@ -1,0 +1,4 @@
+0 : 1
+1 : 0
+
+var2 = 1;var0 = (((not false) > input) and ((not false) == true));if ((var1 < -663)) { var0 = -169; }output var0;

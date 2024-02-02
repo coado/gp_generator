@@ -24,7 +24,7 @@ class Fitness():
             self.input.append(line[0].split())
             self.output.append(line[1].split())
 
-    def fitness_function(self, indiv):
+    def fitness_function(self, indiv, best_fitness = None):
         fitness = 0
         output_generated = []
 
@@ -36,10 +36,13 @@ class Fitness():
         # interpreter
         input_stream = InputStream(result)
         lexer = GPMiniLexer(input_stream)
-        stream = CommonTokenStream(lexer)
+        stream = CommonTokenStream(lexer) 
         parser = GPMiniParser(stream)
         tree = parser.program()
-        for i in range(len(self.input)):
+        len_input = len(self.input)
+
+        
+        for i in range(len_input):
             visitor = MyGPMiniVisitor(self.config.max_interpreter_steps, self.input[i])
             tab = visitor.visitProgram(tree)
             output_generated = tab[0]
@@ -49,6 +52,8 @@ class Fitness():
             elif output_generated == []:
                 fitness -= math.inf
             else:
-                fitness += self.heuristic.rate(self.config.heuristic, self.input[i], self.output[i], output_generated)
+                # fitness += self.heuristic.rate(self.config.heuristic, self.input[i], self.output[i], output_generated)
+                fitness += self.heuristic.rate(self.config.heuristic, self.input[i], self.output[i], output_generated, best_fitness, len_input)
+            
             # print(f"output_generated = {output_generated} \nfitness = {fitness}\n")
         return fitness

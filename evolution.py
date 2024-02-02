@@ -212,11 +212,14 @@ class Evolution(Utils):
     def evolve(self):
         for g in range(self.config.generations):
             self.stats(g)
-            if max(self.state.fitness) == 0:
-                    return self.problem_solved()
-                    
 
-            # print(f"Generation {g}")
+            best_fitness = max(self.state.fitness)
+            if best_fitness == 0:
+                    return self.problem_solved()
+    
+
+            # print(f"Generation {g}")   
+
             for _ in range(self.config.population):
                 evolution_type = self.get_random_evolution_type()
 
@@ -231,12 +234,22 @@ class Evolution(Utils):
                     indiv_index = self._tournament()
                     new_indiv = self._mutation(indiv_index)
 
-                new_fitness = self.fitness.fitness_function(new_indiv)
+                
+                new_fitness = self.fitness.fitness_function(new_indiv, best_fitness)
 
                 # Get worst individual and replace it with new individual
                 offspring_index = self.negative_tournament()
                 self.state.replace_indiv(offspring_index, new_indiv, new_fitness)
-                
+            
+            # 2.2 SEED CORRECT VALUES
+            if g == 10:
+                print("SEED CORRECT VALUES")
+                indiv_index = self.negative_tournament()
+                self.state.stack[indiv_index] = ['=', 'var0', '1','=', 'var1', 'input', 'if', '<', 'var1', '1000', '{', '=', 'var0', '0', '}', 'if', '>=', 'var1', '2000', '{', '=', 'var0', '2', '}','output','var0']
+                self.state.variables[indiv_index] = ['var0', 'var1']
+                new_indiv_fitness = self.fitness.fitness_function(self.state.stack[indiv_index], 0)
+                self.state.fitness[indiv_index] = new_indiv_fitness
+                print("FINTESS: ", new_indiv_fitness)
                 
             
 

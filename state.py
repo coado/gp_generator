@@ -8,6 +8,10 @@ class State:
         self.stack = []
         self.fitness = []
 
+    def seed(self, seed, variables):
+        self.init_new_indiv_state()
+        self.stack[self.current_indiv_index] = seed
+        self.variables[self.current_indiv_index] = variables
     
     def init_new_indiv_state(self):
         if self.current_indiv_index == None:
